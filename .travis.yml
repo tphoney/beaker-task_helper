@@ -1,0 +1,15 @@
+language: ruby
+matrix:
+  fast_finish: true
+  include:
+    - rvm: 2.4.1
+      script: bundle exec rspec spec/beaker
+    - rvm: 2.4.1
+      script: bundle exec rubocop
+    - rvm: 2.4.1
+      env: BEAKER_provision=yes BEAKER_debug=true BEAKER_set=docker/ubuntu-14.04
+      script: bundle exec rspec spec/acceptance
+      services: docker
+      sudo: required
+notifications:
+  email: false
