@@ -1,13 +1,13 @@
 # coding: utf-8
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "beaker/i18n_helper/version"
+require "beaker/task_helper/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "beaker-task_helper"
   spec.version       = Beaker::TaskHelper::VERSION
   spec.authors       = ["puppet"]
-  spec.email         = ["eric.putnam@puppet.com"]
+  spec.email         = ["info@puppet.com"]
 
   spec.summary       = %q{Ruby gem to help testing tasks with Beaker}
   spec.homepage      = "https://github.com/puppetlabs/beaker-i18n_helper"
