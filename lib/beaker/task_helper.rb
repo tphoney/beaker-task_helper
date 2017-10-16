@@ -9,7 +9,7 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
   end
 
   DEFAULT_PASSWORD = if default[:hypervisor] == 'vagrant'
-                     'vagrant'
+                     'puppet'
                    elsif default[:hypervisor] == 'vcloud'
                      'Qu@lity!'
                    end
