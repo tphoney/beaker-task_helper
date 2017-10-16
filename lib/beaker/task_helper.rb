@@ -4,6 +4,16 @@ require 'beaker'
 module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
   include Beaker::DSL
 
+  def puppet_version
+    (on default, puppet('--version')).output.chomp
+  end
+
+  DEFAULT_PASSWORD = if default[:hypervisor] == 'vagrant'
+                     'vagrant'
+                   elsif default[:hypervisor] == 'vcloud'
+                     'Qu@lity!'
+                   end
+
   def install_bolt_on(hosts)
     on(hosts, "/opt/puppetlabs/puppet/bin/gem install --source http://rubygems.delivery.puppetlabs.net bolt -v '> 0.0.1'", acceptable_exit_codes: [0, 1]).stdout
   end
