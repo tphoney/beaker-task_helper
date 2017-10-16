@@ -2,7 +2,7 @@ AllCops:
   Exclude:
     - 'Gemfile'
     - 'Rakefile'
-    - 'beaker-i18n_helper.gemspec'
+    - 'beaker-task_helper.gemspec'
 
 Metrics/MethodLength:
   Max: 200

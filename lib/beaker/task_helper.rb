@@ -3,7 +3,6 @@ require 'beaker'
 # Beaker task Helper
 module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
   include Beaker::DSL
-  include Beaker::DSL::Helpers::FacterHelpers
 
   def install_bolt_on(hosts)
     on(hosts, "/opt/puppetlabs/puppet/bin/gem install --source http://rubygems.delivery.puppetlabs.net bolt -v '> 0.0.1'", acceptable_exit_codes: [0, 1]).stdout
@@ -39,3 +38,5 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
     end
   end
 end
+
+include Beaker::TaskHelper
