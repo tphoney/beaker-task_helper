@@ -18,9 +18,9 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
 
   def install_bolt_on(hosts)
     unless default[:docker_image_commands].nil?
-      if default[:docker_image_commands].include? "yum"
+      if default[:docker_image_commands].to_s.include? "yum"
         on(hosts, "yum install -y make gcc ruby-devel", acceptable_exit_codes: [0, 1]).stdout
-      elsif default[:docker_image_commands].include? "apt-get"
+      elsif default[:docker_image_commands].to_s.include? "apt-get"
         on(hosts, "apt-get install -y make gcc ruby-dev", acceptable_exit_codes: [0, 1]).stdout
       end
     end
