@@ -9,12 +9,21 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
   end
 
   DEFAULT_PASSWORD = if default[:hypervisor] == 'vagrant'
-                     'puppet'
-                   elsif default[:hypervisor] == 'vcloud'
-                     'Qu@lity!'
-                   end
+                      'puppet'
+                     elsif default[:hypervisor] == 'vcloud'
+                       'Qu@lity!'
+                     else
+                       'root'
+                     end
 
   def install_bolt_on(hosts)
+    unless default[:docker_image_commands].nil?
+      if default[:docker_image_commands].include? "yum"
+        on(hosts, "yum install -y make gcc ruby-devel", acceptable_exit_codes: [0, 1]).stdout
+      elsif default[:docker_image_commands].include? "apt-get"
+        on(hosts, "apt-get install -y make gcc ruby-dev", acceptable_exit_codes: [0, 1]).stdout
+      end
+    end
     on(hosts, "/opt/puppetlabs/puppet/bin/gem install bolt -v '> 0.0.1'", acceptable_exit_codes: [0, 1]).stdout
     # on(hosts, "/opt/puppetlabs/puppet/bin/gem install --source http://rubygems.delivery.puppetlabs.net bolt -v '> 0.0.1'", acceptable_exit_codes: [0, 1]).stdout
   end
