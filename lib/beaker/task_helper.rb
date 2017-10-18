@@ -15,7 +15,8 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
                    end
 
   def install_bolt_on(hosts)
-    on(hosts, "/opt/puppetlabs/puppet/bin/gem install --source http://rubygems.delivery.puppetlabs.net bolt -v '> 0.0.1'", acceptable_exit_codes: [0, 1]).stdout
+    on(hosts, "/opt/puppetlabs/puppet/bin/gem install bolt -v '> 0.0.1'", acceptable_exit_codes: [0, 1]).stdout
+    # on(hosts, "/opt/puppetlabs/puppet/bin/gem install --source http://rubygems.delivery.puppetlabs.net bolt -v '> 0.0.1'", acceptable_exit_codes: [0, 1]).stdout
   end
 
   def pe_install?
