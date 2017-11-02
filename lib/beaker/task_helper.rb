@@ -16,7 +16,7 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
                        'root'
                      end
 
-  BOLT_VERSION = '>= 0.6.1'
+  BOLT_VERSION = '>= 0.7.0'
 
   def install_bolt_on(hosts, version = BOLT_VERSION)
     unless default[:docker_image_commands].nil?
@@ -55,9 +55,9 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
 
   def run_bolt_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: "localhost", format: 'human')
     if params.class == Hash
-      on(default, "/opt/puppetlabs/puppet/bin/bolt task run #{task_name} --insecure --modules /etc/puppetlabs/code/modules --nodes #{host} --password #{password} --params '#{params.to_json}'", acceptable_exit_codes: [0, 1]).stdout # rubocop:disable Metrics/LineLength
+      on(default, "/opt/puppetlabs/puppet/bin/bolt task run #{task_name} --insecure -m /etc/puppetlabs/code/modules --nodes #{host} --password #{password} --params '#{params.to_json}'", acceptable_exit_codes: [0, 1]).stdout # rubocop:disable Metrics/LineLength
     else
-      on(default, "/opt/puppetlabs/puppet/bin/bolt task run #{task_name} --insecure --modules /etc/puppetlabs/code/modules --nodes #{host} --password #{password} #{params}", acceptable_exit_codes: [0, 1]).stdout # rubocop:disable Metrics/LineLength
+      on(default, "/opt/puppetlabs/puppet/bin/bolt task run #{task_name} --insecure -m /etc/puppetlabs/code/modules --nodes #{host} --password #{password} #{params}", acceptable_exit_codes: [0, 1]).stdout # rubocop:disable Metrics/LineLength
     end
   end
 
