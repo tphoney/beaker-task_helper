@@ -55,10 +55,12 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
 
   def run_bolt_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: "localhost", format: 'human')
     if params.class == Hash
-      on(default, "/opt/puppetlabs/puppet/bin/bolt task run #{task_name} --insecure -m /etc/puppetlabs/code/modules --nodes #{host} --password #{password} --params '#{params.to_json}'", acceptable_exit_codes: [0, 1]).stdout # rubocop:disable Metrics/LineLength
+      full_cli = "/opt/puppetlabs/puppet/bin/bolt task run #{task_name} --insecure -m /etc/puppetlabs/code/modules --nodes #{host} --password #{password} --params '#{params.to_json}'"
     else
-      on(default, "/opt/puppetlabs/puppet/bin/bolt task run #{task_name} --insecure -m /etc/puppetlabs/code/modules --nodes #{host} --password #{password} #{params}", acceptable_exit_codes: [0, 1]).stdout # rubocop:disable Metrics/LineLength
+      full_cli = "/opt/puppetlabs/puppet/bin/bolt task run #{task_name} --insecure -m /etc/puppetlabs/code/modules --nodes #{host} --password #{password} #{params}"
     end
+    puts "bolt cli: " + full_cli
+    on(default, full_cli, acceptable_exit_codes: [0, 1]).stdout
   end
 
   def run_puppet_task(task_name:, params: nil, host: 'localhost', format: 'human')
