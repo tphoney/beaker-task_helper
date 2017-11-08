@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.email         = ["info@puppet.com"]
 
   spec.summary       = %q{Ruby gem to help testing tasks with Beaker}
-  spec.homepage      = "https://github.com/puppetlabs/beaker-i18n_helper"
-  spec.license       = "Apache 2.0"
+  spec.homepage      = "https://github.com/puppetlabs/beaker-task_helper"
+  spec.license       = "Apache-2"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
