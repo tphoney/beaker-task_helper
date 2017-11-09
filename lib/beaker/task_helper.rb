@@ -18,7 +18,7 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
 
   BOLT_VERSION = '>= 0.7.0'
 
-  def install_bolt_on(hosts, version = BOLT_VERSION)
+  def install_bolt_on(hosts, version = BOLT_VERSION, source = nil)
     unless default[:docker_image_commands].nil?
       if default[:docker_image_commands].to_s.include? "yum"
         on(hosts, "yum install -y make gcc ruby-devel", acceptable_exit_codes: [0, 1]).stdout
@@ -27,7 +27,13 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
       end
 
     end
-    on(hosts, "/opt/puppetlabs/puppet/bin/gem install --source http://rubygems.delivery.puppetlabs.net bolt -v '#{BOLT_VERSION}'", acceptable_exit_codes: [0, 1]).stdout
+    source_string = if source
+                      ''
+                    else
+                      "--source #{source}"
+                    end
+
+    on(hosts, "/opt/puppetlabs/puppet/bin/gem install #{source_string} bolt -v '#{BOLT_VERSION}'", acceptable_exit_codes: [0, 1]).stdout
   end
 
   def pe_install?
