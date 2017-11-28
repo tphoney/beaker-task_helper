@@ -48,11 +48,11 @@ INSTALL_BOLT_PP
     on(master, puppet('access', 'login', '--username', user, '--lifetime', lifetime), stdin: password)
   end
 
-  def run_task(task_name:, params: nil, password: DEFAULT_PASSWORD, format: 'human')
+  def run_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: 'localhost', format: 'human')
     output = if pe_install?
-               run_puppet_task(task_name: task_name, params: params)
+               run_puppet_task(task_name: task_name, params: params, host: host)
              else
-               run_bolt_task(task_name: task_name, params: params, password: password)
+               run_bolt_task(task_name: task_name, params: params, password: password, host: host)
              end
 
     if format == 'json'
@@ -104,6 +104,10 @@ INSTALL_BOLT_PP
     regexes.each do |regex|
       expect(result).to match(regex)
     end
+  end
+
+  def task_summary_line(total_hosts: 1, success_hosts: 1)
+    "Job completed. #{success_hosts}/#{total_hosts} nodes succeeded|Ran on #{total_hosts} node"
   end
 end
 
