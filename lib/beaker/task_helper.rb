@@ -48,10 +48,12 @@ INSTALL_BOLT_PP
     on(master, puppet('access', 'login', '--username', user, '--lifetime', lifetime), stdin: password)
   end
 
-  def run_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: 'localhost', format: 'human')
+  def run_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: nil, format: 'human')
     output = if pe_install?
+               host = master.hostname if host.nil?
                run_puppet_task(task_name: task_name, params: params, host: host)
              else
+               host = 'localhost' if host.nil?
                run_bolt_task(task_name: task_name, params: params, password: password, host: host)
              end
 
