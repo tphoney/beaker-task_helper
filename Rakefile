@@ -8,8 +8,8 @@ task :default => :spec
 begin
   require 'github_changelog_generator/task'
   GitHubChangelogGenerator::RakeTask.new :changelog do |config|
-    require 'beaker/i18n_helper/version'
-    config.future_release = "v#{Beaker::I18nHelper::VERSION}"
+    require 'beaker/task_helper/version'
+    config.future_release = "v#{Beaker::TaskHelper::VERSION}"
     config.header = "# Changelog\n\nAll notable changes to this project will be documented in this file.\n"
     config.include_labels = %w[enhancement bug]
     config.user = 'puppetlabs'

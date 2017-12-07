@@ -1,5 +1,4 @@
 require 'bundler/setup'
-require 'beaker/i18n_helper'
 require 'rspec'
 
 RSpec.configure do |config|

@@ -18,7 +18,7 @@ If you're adding new functionality or configuration, you're probably adding a fe
 If you're fixing a bug without adding functionality, please review the tests and docs to see if any changes are necessary but they may not be.
 
 ## Submitting Changes
-Once you've finished your change, push it up to your fork and open a PR against puppetlabs/beaker-i18n_helper. Someone from puppetlabs will then review and (hopefully) merge the PR for you.
+Once you've finished your change, push it up to your fork and open a PR against puppetlabs/beaker-task_helper. Someone from puppetlabs will then review and (hopefully) merge the PR for you.
 
 ### Commit Messages
 Please make sure commit messages are meaningful and concise. They should include answers to questions like: Why was this change needed? How did I implement this change? Why did I do it the way I did?
