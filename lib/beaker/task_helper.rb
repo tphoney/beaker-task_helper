@@ -16,7 +16,7 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
                        'root'
                      end
 
-  BOLT_VERSION = '0.7.0'.freeze
+  BOLT_VERSION = '0.16.1'.freeze
 
   def install_bolt_on(hosts, version = BOLT_VERSION, source = nil)
     unless default[:docker_image_commands].nil?
@@ -73,7 +73,14 @@ INSTALL_BOLT_PP
       bolt_path = '/opt/puppetlabs/puppet/bin/bolt'
       module_path = '/etc/puppetlabs/code/modules'
     end
-    bolt_full_cli = "#{bolt_path} task run #{task_name} --insecure -m #{module_path} --nodes #{host} --password #{password}" # rubocop:disable Metrics/LineLength
+
+    if Puppet::Util::Package.versioncmp(BOLT_VERSION, '0.15.0') > 0
+      check = '--no-host-key-check'
+    else
+      check = '--insecure'
+    end
+
+    bolt_full_cli = "#{bolt_path} task run #{task_name} #{check} -m #{module_path} --nodes #{host} --password #{password}" # rubocop:disable Metrics/LineLength
     bolt_full_cli << if params.class == Hash
                        " --params '#{params.to_json}'"
                      else
