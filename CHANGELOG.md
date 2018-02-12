@@ -1,5 +1,11 @@
 # Change Log
 
+### 1.3.0
+
+  * Cleaning up the README
+  * Making compatible with bolt versions greater than 0.15.0
+  * Pinning bolt install version to 0.16.1
+
 ### 1.2.0
 
  * run_task now takes host as a parameter.
