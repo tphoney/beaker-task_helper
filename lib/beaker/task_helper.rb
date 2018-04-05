@@ -69,16 +69,23 @@ INSTALL_BOLT_PP
     if fact_on(default, 'osfamily') == 'windows'
       bolt_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/Puppet/sys/ruby/bin/bolt.bat'
       module_path = 'C:/ProgramData/PuppetLabs/code/modules'
+
+      if Puppet::Util::Package.versioncmp(BOLT_VERSION, '0.15.0') > 0
+        check = '--no-ssl'
+      else
+        check = '--insecure'
+      end
     else
       bolt_path = '/opt/puppetlabs/puppet/bin/bolt'
       module_path = '/etc/puppetlabs/code/modules'
+
+      if Puppet::Util::Package.versioncmp(BOLT_VERSION, '0.15.0') > 0
+        check = '--no-host-key-check'
+      else
+        check = '--insecure'
+      end
     end
 
-    if Puppet::Util::Package.versioncmp(BOLT_VERSION, '0.15.0') > 0
-      check = '--no-host-key-check'
-    else
-      check = '--insecure'
-    end
 
     bolt_full_cli = "#{bolt_path} task run #{task_name} #{check} -m #{module_path} --nodes #{host} --password #{password}" # rubocop:disable Metrics/LineLength
     bolt_full_cli << if params.class == Hash
