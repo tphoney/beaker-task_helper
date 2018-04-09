@@ -25,7 +25,6 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
       elsif default[:docker_image_commands].to_s.include? 'apt-get'
         on(hosts, 'apt-get install -y make gcc ruby-dev', acceptable_exit_codes: [0, 1]).stdout
       end
-
     end
 
     Array(hosts).each do |host|
@@ -51,10 +50,11 @@ INSTALL_BOLT_PP
   def run_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: nil, format: 'human')
     output = if pe_install?
                host = master.hostname if host.nil?
-               run_puppet_task(task_name: task_name, params: params, host: host)
+               run_puppet_task(task_name: task_name, params: params, host: host, format: format)
              else
                host = 'localhost' if host.nil?
-               run_bolt_task(task_name: task_name, params: params, password: password, host: host)
+               run_bolt_task(task_name: task_name, params: params,
+                             password: password, host: host, format: format)
              end
 
     if format == 'json'
@@ -65,7 +65,8 @@ INSTALL_BOLT_PP
     end
   end
 
-  def run_bolt_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: 'localhost', format: 'human') # rubocop:disable Metrics/LineLength, Lint/UnusedMethodArgument
+  def run_bolt_task(task_name:, params: nil, password: DEFAULT_PASSWORD,
+                    host: 'localhost', format: 'human')
     if fact_on(default, 'osfamily') == 'windows'
       bolt_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/Puppet/sys/ruby/bin/bolt.bat'
       module_path = 'C:/ProgramData/PuppetLabs/code/modules'
@@ -86,8 +87,9 @@ INSTALL_BOLT_PP
       end
     end
 
-
-    bolt_full_cli = "#{bolt_path} task run #{task_name} #{check} -m #{module_path} --nodes #{host} --password #{password}" # rubocop:disable Metrics/LineLength
+    bolt_full_cli = "#{bolt_path} task run #{task_name} #{check} -m #{module_path} " \
+                    "--nodes #{host} --password #{password}"
+    bolt_full_cli << " --format #{format}" if format != 'human'
     bolt_full_cli << if params.class == Hash
                        " --params '#{params.to_json}'"
                      else
@@ -109,9 +111,9 @@ INSTALL_BOLT_PP
     else
       args << params
     end
-    if format == 'json'
+    if format != 'human'
       args << '--format'
-      args << 'json'
+      args << format
     end
     on(master, puppet(*args), acceptable_exit_codes: [0, 1]).stdout
   end
