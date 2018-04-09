@@ -100,7 +100,7 @@ INSTALL_BOLT_PP
       bolt_full_cli << ' --transport winrm --user Administrator'
     end
     puts "BOLT_CLI: #{bolt_full_cli}" if ENV['BEAKER_debug']
-    on(default, bolt_full_cli, acceptable_exit_codes: [0, 1]).stdout
+    on(default, bolt_full_cli, acceptable_exit_codes: [0, 1, 2]).stdout
   end
 
   def run_puppet_task(task_name:, params: nil, host: 'localhost', format: 'human')
