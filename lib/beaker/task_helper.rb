@@ -8,10 +8,10 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
     (on default, puppet('--version')).output.chomp
   end
 
-  DEFAULT_PASSWORD = if default[:hypervisor] == 'vagrant'
+  DEFAULT_PASSWORD = if ENV.has_key?('BEAKER_password')
+                       ENV['BEAKER_password']
+                     elsif default[:hypervisor] == 'vagrant'
                        'puppet'
-                     elsif default[:hypervisor] == 'vcloud' || default[:hypervisor] == 'vmpooler'
-                       'Qu@lity!'
                      else
                        'root'
                      end
