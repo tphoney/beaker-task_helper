@@ -8,10 +8,10 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
     (on default, puppet('--version')).output.chomp
   end
 
-  DEFAULT_PASSWORD = if default[:hypervisor] == 'vagrant'
+  DEFAULT_PASSWORD = if ENV.has_key?('BEAKER_password')
+                       ENV['BEAKER_password']
+                     elsif default[:hypervisor] == 'vagrant'
                        'puppet'
-                     elsif default[:hypervisor] == 'vcloud' || default[:hypervisor] == 'vmpooler'
-                       'Qu@lity!'
                      else
                        'root'
                      end
@@ -25,7 +25,6 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
       elsif default[:docker_image_commands].to_s.include? 'apt-get'
         on(hosts, 'apt-get install -y make gcc ruby-dev', acceptable_exit_codes: [0, 1]).stdout
       end
-
     end
 
     Array(hosts).each do |host|
@@ -51,10 +50,11 @@ INSTALL_BOLT_PP
   def run_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: nil, format: 'human')
     output = if pe_install?
                host = master.hostname if host.nil?
-               run_puppet_task(task_name: task_name, params: params, host: host)
+               run_puppet_task(task_name: task_name, params: params, host: host, format: format)
              else
                host = 'localhost' if host.nil?
-               run_bolt_task(task_name: task_name, params: params, password: password, host: host)
+               run_bolt_task(task_name: task_name, params: params,
+                             password: password, host: host, format: format)
              end
 
     if format == 'json'
@@ -65,22 +65,31 @@ INSTALL_BOLT_PP
     end
   end
 
-  def run_bolt_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: 'localhost', format: 'human') # rubocop:disable Metrics/LineLength, Lint/UnusedMethodArgument
+  def run_bolt_task(task_name:, params: nil, password: DEFAULT_PASSWORD,
+                    host: 'localhost', format: 'human')
     if fact_on(default, 'osfamily') == 'windows'
       bolt_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/Puppet/sys/ruby/bin/bolt.bat'
       module_path = 'C:/ProgramData/PuppetLabs/code/modules'
+
+      if Puppet::Util::Package.versioncmp(BOLT_VERSION, '0.15.0') > 0
+        check = '--no-ssl'
+      else
+        check = '--insecure'
+      end
     else
       bolt_path = '/opt/puppetlabs/puppet/bin/bolt'
       module_path = '/etc/puppetlabs/code/modules'
+
+      if Puppet::Util::Package.versioncmp(BOLT_VERSION, '0.15.0') > 0
+        check = '--no-host-key-check'
+      else
+        check = '--insecure'
+      end
     end
 
-    if Puppet::Util::Package.versioncmp(BOLT_VERSION, '0.15.0') > 0
-      check = '--no-host-key-check'
-    else
-      check = '--insecure'
-    end
-
-    bolt_full_cli = "#{bolt_path} task run #{task_name} #{check} -m #{module_path} --nodes #{host} --password #{password}" # rubocop:disable Metrics/LineLength
+    bolt_full_cli = "#{bolt_path} task run #{task_name} #{check} -m #{module_path} " \
+                    "--nodes #{host} --password #{password}"
+    bolt_full_cli << " --format #{format}" if format != 'human'
     bolt_full_cli << if params.class == Hash
                        " --params '#{params.to_json}'"
                      else
@@ -91,7 +100,7 @@ INSTALL_BOLT_PP
       bolt_full_cli << ' --transport winrm --user Administrator'
     end
     puts "BOLT_CLI: #{bolt_full_cli}" if ENV['BEAKER_debug']
-    on(default, bolt_full_cli, acceptable_exit_codes: [0, 1]).stdout
+    on(default, bolt_full_cli, acceptable_exit_codes: [0, 1, 2]).stdout
   end
 
   def run_puppet_task(task_name:, params: nil, host: 'localhost', format: 'human')
@@ -102,9 +111,9 @@ INSTALL_BOLT_PP
     else
       args << params
     end
-    if format == 'json'
+    if format != 'human'
       args << '--format'
-      args << 'json'
+      args << format
     end
     on(master, puppet(*args), acceptable_exit_codes: [0, 1]).stdout
   end
