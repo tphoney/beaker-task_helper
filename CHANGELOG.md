@@ -1,5 +1,11 @@
 # Change Log
 
+### 1.4.0
+
+  * Added `BEAKER_password` variable for remote tasks.
+  * Fix windows on bolt >=0.16.0
+  * Fix json output format.
+
 ### 1.3.0
 
   * Cleaning up the README
