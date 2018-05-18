@@ -71,7 +71,7 @@ INSTALL_BOLT_PP
       bolt_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/Puppet/sys/ruby/bin/bolt.bat'
       module_path = 'C:/ProgramData/PuppetLabs/code/modules'
 
-      if Puppet::Util::Package.versioncmp(BOLT_VERSION, '0.15.0') > 0
+      if version_is_less('0.15.0', BOLT_VERSION)
         check = '--no-ssl'
       else
         check = '--insecure'
@@ -80,7 +80,7 @@ INSTALL_BOLT_PP
       bolt_path = '/opt/puppetlabs/puppet/bin/bolt'
       module_path = '/etc/puppetlabs/code/modules'
 
-      if Puppet::Util::Package.versioncmp(BOLT_VERSION, '0.15.0') > 0
+      if version_is_less('0.15.0', BOLT_VERSION)
         check = '--no-host-key-check'
       else
         check = '--insecure'
