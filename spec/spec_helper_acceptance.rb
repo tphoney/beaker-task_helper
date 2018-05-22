@@ -1,6 +1,6 @@
 require 'beaker'
 require 'beaker-rspec'
-require 'beaker/task_helper'
+require 'beaker-task_helper'
 
 RSpec.configure do |c|
   c.before :suite do
