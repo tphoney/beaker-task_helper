@@ -49,6 +49,21 @@ INSTALL_BOLT_PP
     on(master, puppet('access', 'login', '--username', user, '--lifetime', lifetime), stdin: password)
   end
 
+  #Setup ssh access between task runner and nodes
+  #@param [Host] Task runner
+  #@param [Array<Host> Nodes on which to run the task
+  #
+  #TODO: Implement on windows
+  def setup_ssh_access(task_runner, nodes)
+    ssh_dir_path = '/root/.ssh/'
+    rsa_pub_path = "#{ssh_dir_path}/id_rsa.pub"
+
+    on task_runner, "ssh-keygen -f #{ssh_dir_path}/id_rsa -t rsa -N ''"
+    public_key = on(task_runner, "cat #{rsa_pub_path}").stdout
+    create_remote_file(nodes, "#{rsa_pub_path}", public_key)
+    on(nodes, "cat #{rsa_pub_path} >> #{ssh_dir_path}/authorized_keys")
+  end
+
   def run_task(task_name:, params: nil, password: DEFAULT_PASSWORD, host: nil, format: 'human')
     output = if pe_install?
                host = master.hostname if host.nil?
