@@ -38,6 +38,10 @@ INSTALL_BOLT_PP
       pp << "source   => '#{source}'" if source
       pp << '}'
       apply_manifest_on(host, pp)
+
+      bolt_confdir = "#{on(host, 'echo $HOME').stdout.chomp}/.puppetlabs/bolt"
+      on host, "mkdir -p #{bolt_confdir}"
+      create_remote_file(host, "#{bolt_confdir}/analytics.yaml", { 'disabled' => true }.to_yaml)
     end
   end
 
