@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.5.0
+### Added
+- `Beaker::TaskHelper::Inventory.hosts_to_inventory` creates an inventory hash from beaker hosts.
+
 ## 1.4.5
 ### Fixed
 - Windows path to bolt
@@ -55,4 +59,4 @@ This version is not semver.
 - Fix license and point to the correct github URL.
 
 ## 1.0.0
-- Initial release, helper methods to run bolt or pe tasks. 
+- Initial release, helper methods to run bolt or pe tasks.
