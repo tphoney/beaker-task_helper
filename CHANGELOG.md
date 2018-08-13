@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.5.1
+### Added
+- Include CHANGELOG.md entry for previous release.
+
 ## 1.5.0
 ### Added
 - `Beaker::TaskHelper::Inventory.hosts_to_inventory` creates an inventory hash from beaker hosts.
