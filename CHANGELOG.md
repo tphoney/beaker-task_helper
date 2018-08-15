@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.5.2
+### Added
+- Add support for AlwaysBeScheduling hypervisor to `Beaker::TaskHelper::Inventory.hosts_to_inventory`.
+
 ## 1.5.1
 ### Added
 - Include CHANGELOG.md entry for previous release.
