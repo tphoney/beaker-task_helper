@@ -45,7 +45,7 @@ module Beaker
               keys = host.connection.instance_variable_get(:@ssh).options[:keys]
               key = keys.first if keys
               config['ssh']['private-key'] = key if key
-            when 'vmpooler'
+            when 'vmpooler', 'abs'
               key = nil
               keys = host[:ssh][:keys]
               key = keys.first if keys
