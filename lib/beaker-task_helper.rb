@@ -88,7 +88,7 @@ INSTALL_BOLT_PP
 
   def run_bolt_task(task_name:, params: nil, password: DEFAULT_PASSWORD,
                     host: 'localhost', format: 'human', module_path: nil)
-    module_path ||= hosts.first.puppet['modulepath']
+    module_path ||= default['distmoduledir']
     if fact_on(default, 'osfamily') == 'windows'
       bolt_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/Puppet/sys/ruby/bin/bolt.bat'
       if version_is_less('0.15.0', BOLT_VERSION)
