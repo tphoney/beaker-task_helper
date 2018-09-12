@@ -73,7 +73,7 @@ INSTALL_BOLT_PP
                host = master.hostname if host.nil?
                run_puppet_task(task_name: task_name, params: params, host: host, format: format)
              else
-               host = 'localhost' if host.nil?
+               host = '127.0.0.1' if host.nil?
                run_bolt_task(task_name: task_name, params: params,
                              password: password, host: host, format: format)
              end
@@ -87,7 +87,7 @@ INSTALL_BOLT_PP
   end
 
   def run_bolt_task(task_name:, params: nil, password: DEFAULT_PASSWORD,
-                    host: 'localhost', format: 'human', module_path: nil)
+                    host: '127.0.0.1', format: 'human', module_path: nil)
     if fact_on(default, 'osfamily') == 'windows'
       bolt_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/Puppet/sys/ruby/bin/bolt.bat'
       module_path ||= 'C:/ProgramData/PuppetLabs/code/modules'
@@ -124,7 +124,7 @@ INSTALL_BOLT_PP
     on(default, bolt_full_cli, acceptable_exit_codes: [0, 1, 2]).stdout
   end
 
-  def run_puppet_task(task_name:, params: nil, host: 'localhost', format: 'human')
+  def run_puppet_task(task_name:, params: nil, host: '127.0.0.1', format: 'human')
     args = ['task', 'run', task_name, '--nodes', host]
     if params.class == Hash
       args << '--params'
