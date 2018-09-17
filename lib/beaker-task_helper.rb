@@ -18,7 +18,7 @@ module Beaker::TaskHelper # rubocop:disable Style/ClassAndModuleChildren
                        'root'
                      end
 
-  BOLT_VERSION = '0.16.1'.freeze
+  BOLT_VERSION = '0.22.0'.freeze
 
   def install_bolt_on(hosts, version = BOLT_VERSION, source = nil)
     unless default[:docker_image_commands].nil?
